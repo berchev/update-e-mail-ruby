@@ -5,3 +5,5 @@
 - [ ] write application which purpose is to update student e-mail
 - [ ] use Vault in order to authenticate Application against MySQL database
 - [ ] use Dynamic secrets
+- [ ] find more ruby way to parse current_table
+- [ ] refactor next two blocks to avoid duplicate code
