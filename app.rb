@@ -4,8 +4,8 @@
 require 'mysql2'
 
 # Variables definition
-username = "root"
-password = "vagrant"
+username = File.open("username.txt", "r") { |file| file.read }.delete!("\n")
+password = File.open("password.txt", "r") { |file| file.read }.delete!("\n")
 database = "personal_info"
 host = "192.168.56.11"
 

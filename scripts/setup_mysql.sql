@@ -23,5 +23,5 @@ VALUES
     ('martin', 'martin@example.bg' ), 
     ('slav', 'slav@example.bg'), 
     ('chavdar', 'chavdar@example.bg'), 
-    ('slav', 'slav@example.bg'), 
+    ('denislav', 'denislav@example.bg'), 
     ('nikolay', 'nikolay@example.bg');
