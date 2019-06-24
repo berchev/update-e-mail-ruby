@@ -16,8 +16,6 @@ dpkg -l libmysqlclient-dev || {
   apt-get install -y libmysqlclient-dev
 }
 
-# Install gem mysql2 if not installed
-gem list -i mysql2 || gem install mysql2
 
 # Configure MySQL to listen on all IPs, if not configured
 grep "bind-address		= 0.0.0.0" /etc/mysql/mysql.conf.d/mysqld.cnf || {
