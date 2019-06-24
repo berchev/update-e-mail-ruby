@@ -7,3 +7,4 @@
 - [ ] use Dynamic secrets
 - [ ] find more ruby way to parse current_table
 - [ ] refactor next two blocks to avoid duplicate code
+- [ ] If studet name == exit we exit 

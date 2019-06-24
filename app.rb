@@ -1,13 +1,29 @@
 #!/usr/bin/env ruby
 
-# Loading redis library
+# Loading mysql library
 require 'mysql2'
 
-# Variables definition
-username = File.open("username.txt", "r") { |file| file.read }.delete!("\n")
-password = File.open("password.txt", "r") { |file| file.read }.delete!("\n")
+# Loading vault library
+require 'vault' 
+
+# Get mysql token value from mysql_token.txt file and remove the last new line character
+mysql_token = File.open("mysql_token.txt", "r") { |file| file.read }.delete!("\n")
+
+# Estabish connection to vault
+Vault.configure do |config| 
+  config.address = "http://192.168.56.31:8200"
+  config.token = mysql_token
+end
+
+# Get new login credentials for mysql database
+secret = Vault.logical.read("database/creds/mysqlrole")
+
+# Mysql variables definition
 database = "personal_info"
 host = "192.168.56.11"
+username = secret.data[:username]
+password = secret.data[:password]
+
 
 # Establish connection to MySQL database
 client = Mysql2::Client.new(:host => host, :username => username, :password => password, :database => database)
@@ -42,6 +58,8 @@ puts
 puts
 puts "Please select student name: "
 student_name = gets.chomp
+
+# TODO: If studet name == exit we exit
 
 # Check if student name exists into database
 # Ask Operator to enter e-mail and verify if the e-mail is real one or is not duplicated 
