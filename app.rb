@@ -6,6 +6,15 @@ require 'mysql2'
 # Loading vault library
 require 'vault' 
 
+# Format_as_table function definition
+def format_as_table(input)
+  input.each do |row|
+    hash = row
+    array = hash.values
+    puts array.join(' - ')
+  end
+end
+
 # Get mysql token value from mysql_token.txt file and remove the last new line character
 mysql_token = File.open("mysql_token.txt", "r") { |file| file.read }.delete!("\n")
 
@@ -28,38 +37,39 @@ password = secret.data[:password]
 # Establish connection to MySQL database
 client = Mysql2::Client.new(:host => host, :username => username, :password => password, :database => database)
 
-# Get all current results from students table
-current_table = client.query("SELECT id,name,email FROM students")
+# Print your username
+puts
+puts "Your currently generated username from Vault is: #{username}"
 
-# Show current table values for convenience
+# Get all current results from students table
+results = client.query("SELECT id,name,email FROM students")
+
+puts
 puts "List of current emails:"
 puts "-----------------------"
-current_table.each do |hash_row|
-  array = hash_row.values_at("id", "name", "email")
-  puts array.join(' - ')
-end
 
-# TODO: find more ruby way to parse current_table
+# Format as table the row data from MySQL database (show current students table)
+format_as_table(results)
+
 # Add all student names and emails from MySQL to separate arrays
 all_names = []
 all_emails = []
-current_table.each do |hash_row|
-  hash_row.each do |key, value|
+results.each do |hash|
+  hash.each do |key, value|
     if key == "name"
-      all_names << value
+      all_names.push(value)
     elsif key == "email"
-      all_emails << value
+      all_emails.push(value)
     end
   end
 end
+
 
 # Ask Operator to choose student name
 puts
 puts
 puts "Please select student name: "
 student_name = gets.chomp
-
-# TODO: If studet name == exit we exit
 
 # Check if student name exists into database
 # Ask Operator to enter e-mail and verify if the e-mail is real one or is not duplicated 
@@ -71,7 +81,12 @@ if all_names.include?(student_name)
     puts "E-mail already exists or this is not e-mail address at all !!"
     puts "Try again!"
     exit
-  end  
+  end
+elsif student_name == "exit"
+  puts
+  puts "You didn't change email!" 
+  puts "Bye Bye!"
+  exit
 else
   puts "You have entered NOT existing name!"
   puts "Try again!"
@@ -81,16 +96,13 @@ end
 # Connect to MySQL and update the email address of specific user
 update_email = client.query("UPDATE students SET email = \"#{new_email}\" WHERE name = \"#{student_name}\"")
 
-# TODO: refactor next two blocks to avoid duplicate code
 # Get results from updated students table
-new_table = client.query("SELECT id,name,email FROM students")
+updated_results = client.query("SELECT id,name,email FROM students")
 
-# Show new table values for convenience
 puts
 puts
-puts "List of current emails:"
+puts "List of updated emails:"
 puts "-----------------------"
-new_table.each do |hash_row|
-  array = hash_row.values_at("id", "name", "email")
-  puts array.join(' - ')
-end
+
+# Format as table the row data from updated MySQL database (shows updated students table)
+format_as_table(updated_results)
