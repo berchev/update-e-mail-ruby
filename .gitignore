@@ -1,3 +1,4 @@
 .vagrant/
 username.txt
 password.txt
+mysql_token.txt
