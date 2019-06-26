@@ -54,7 +54,7 @@ This repo represents dev environment with 3 VMs:
 - [x] use Dynamic secrets
 - [x] find more ruby way to parse current_table
 - [x] refactor next two blocks to avoid duplicate code (format_as_table function has been written)
-- [x] If studet name == exit we exit
+- [x] If student name == exit we exit
 - [x] Print current vault user as infomation for the operator
 
 ## TODO
