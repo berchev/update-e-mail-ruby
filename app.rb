@@ -76,7 +76,7 @@ while true
   elsif all_names.include?(student_name)
     while true
       puts
-      puts "Please enter a new email for #{student_name} ot type 'exit' to quit: "
+      puts "Please enter a new email for #{student_name} or type 'exit' to quit: "
       new_email = gets.chomp
       if new_email == "exit"
         break
