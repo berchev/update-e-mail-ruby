@@ -67,47 +67,52 @@ puts
 puts
 
 # Ask Operator to choose student name and e-mail
-while true
-  puts "Please select student name or type 'exit' to quit: "
-  student_name = gets.chomp
-  if student_name == "exit"
-    puts "Bye Bye!"
-    break
-  elsif all_names.include?(student_name)
-    while true
-      puts
-      puts "Please enter a new email for #{student_name} or type 'exit' to quit: "
-      new_email = gets.chomp
-      if new_email == "exit"
-        break
-      elsif all_emails.include?(new_email)
+begin
+  while true
+    puts "Please select student name or type 'exit' to quit: "
+    student_name = gets.chomp
+    if student_name == "exit"
+      puts "Bye Bye!"
+      break
+    elsif all_names.include?(student_name)
+      while true
         puts
-        puts "ERROR !"
-        puts "E-mail already exists !!"
-        puts "Try again!" 
-      elsif !new_email.include?('@example.bg')
-        puts
-        puts "ERROR !"
-        puts "this is not e-mail address at all"
-        puts "Try again!"
-      else
-        # Connect to MySQL and update the email address of specific user
-        update_email = client.query("UPDATE students SET email = \"#{new_email}\" WHERE name = \"#{student_name}\"")
+        puts "Please enter a new email for #{student_name} or type 'exit' to quit: "
+        new_email = gets.chomp
+        if new_email == "exit"
+          break
+        elsif all_emails.include?(new_email)
+          puts
+          puts "ERROR !"
+          puts "E-mail already exists !!"
+          puts "Try again!" 
+        elsif !new_email.include?('@example.bg')
+          puts
+          puts "ERROR !"
+          puts "this is not e-mail address at all"
+          puts "Try again!"
+        else
+          # Connect to MySQL and update the email address of specific user
+          update_email = client.query("UPDATE students SET email = \"#{new_email}\" WHERE name = \"#{student_name}\"")
 
-        # Get results from updated students table
-        updated_results = client.query("SELECT id,name,email FROM students")
+          # Get results from updated students table
+          updated_results = client.query("SELECT id,name,email FROM students")
 
-        puts
-        puts
-        puts "List of updated emails:"
-        puts "-----------------------"
+          puts
+          puts
+          puts "List of updated emails:"
+          puts "-----------------------"
 
-        # Format as table the row data from updated MySQL database (shows updated students table)
-        format_as_table(updated_results) 
+          # Format as table the row data from updated MySQL database (shows updated students table)
+          format_as_table(updated_results) 
+        end
       end
+    else
+      puts "You have entered NOT existing name!"
+      puts "Try again!"
     end
-  else
-    puts "You have entered NOT existing name!"
-    puts "Try again!"
   end
+rescue Interrupt => e
+  puts " -> You have used 'control-C' to exit!"
+  puts "Bye Bye! " 
 end

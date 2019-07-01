@@ -11,10 +11,10 @@ which jq || {
 } 
 
 # Install mysql client if not installed
-dpkg -l libmysqlclient-dev || {
-  apt-get update
-  apt-get install -y libmysqlclient-dev
-}
+#dpkg -l libmysqlclient-dev || {
+#  apt-get update
+#  apt-get install -y libmysqlclient-dev
+#}
 
 
 # Configure MySQL to listen on all IPs, if not configured
