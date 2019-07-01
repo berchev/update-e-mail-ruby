@@ -16,11 +16,11 @@ Vagrant.configure("2") do |config|
     node.vm.provision :shell, path: "scripts/vault01_provision.sh"
   end
 
-  config.vm.define "app01" do |node|
+  config.vm.define "mysql-client01" do |node|
     node.vm.box = "berchev/xenial64"
-    node.vm.hostname = "app01"
+    node.vm.hostname = "mysql-client01"
     node.vm.network "private_network", ip: "192.168.56.21"
-    node.vm.provision :shell, path: "scripts/app01_provision.sh"
+    node.vm.provision :shell, path: "scripts/mysql_client01_provision.sh"
   end
   
 end
