@@ -12,7 +12,7 @@ This repo represents dev environment with 3 VMs:
 | File                   | Description                      |
 |         ---            |                ---               |
 | conf/mysqld.cnf | mysql configuration |
-| scripts/app01_provision.sh | provision script for app01 VM |
+| scripts/mysql_client01_provision.sh | provision script for app01 VM |
 | scripts/mysql01_provision.sh | provision script for mysql01 VM |
 | scripts/vault01_provision.sh | provision script for vault01 VM |
 | scripts/setup_mysql.sql | sql script required to setup mysql01 VM |
@@ -22,7 +22,7 @@ This repo represents dev environment with 3 VMs:
 | mysql.hcl | policy file. Vault token with specific permissions, will be created based on that policy file |
 
 ## Description
-**app01**(app.rb) is application that updates email of specific student from **mysql01**. The ruby application(app.rb) connect to the MySQL database using token provided form **vault01** VM
+**mysql-client01**(app.rb) is application that updates email of specific student from **mysql01**. The ruby application(app.rb) connect to the MySQL database using token provided form **vault01** VM
 
 ## Setup dev environment
 - `git clone https://github.com/berchev/update-e-mail-ruby.git` - download the project
@@ -56,6 +56,7 @@ This repo represents dev environment with 3 VMs:
 - [x] refactor next two blocks to avoid duplicate code (format_as_table function has been written)
 - [x] If student name == exit we exit
 - [x] Print current vault user as infomation for the operator
+- [x] make application to exit smoothly with `ctrl + c`
 
 ## TODO
 - [ ] Review flyway for database migration
