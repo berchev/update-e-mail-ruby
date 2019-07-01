@@ -29,7 +29,7 @@ This repo represents dev environment with 3 VMs:
 - `cd update-e-mail-ruby` - change to project directory 
 - `vagrant up` - create dev Vagrant environment
 - `vagrant status` - will status of all 3 VMs
-- `vagrant ssh <VM name>` - establish ssh connection to desired VM (example: vagrant ssh app01)
+- `vagrant ssh <VM name>` - establish ssh connection to desired VM (example: vagrant ssh mysql-client01)
 
 ## Vault setup
 - `vagrant ssh vault01` - connect to vault01 machine
@@ -42,7 +42,7 @@ This repo represents dev environment with 3 VMs:
 
 ## Update given e-mail
 - open another terminal for our app01 machine
-- `vagrant ssh app01` - in order to connect to app01
+- `vagrant ssh mysql-client01` - in order to connect to app01
 - `cd /vagrant` - change to /vagrant director
 - `ruby app.rb` - in order to run the update email application
 - Follow the instructions
