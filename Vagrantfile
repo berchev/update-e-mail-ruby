@@ -17,10 +17,9 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "mysql-client01" do |node|
-    node.vm.box = "berchev/xenial64"
+    node.vm.box = "berchev/mysql_client64"
     node.vm.hostname = "mysql-client01"
     node.vm.network "private_network", ip: "192.168.56.21"
-    node.vm.provision :shell, path: "scripts/mysql_client01_provision.sh"
   end
   
 end
