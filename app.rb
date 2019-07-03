@@ -89,7 +89,7 @@ begin
         elsif !new_email.include?('@example.bg')
           puts
           puts "ERROR !"
-          puts "this is not e-mail address at all"
+          puts "This is not a valid e-mail address!"
           puts "Try again!"
         else
           # Connect to MySQL and update the email address of specific user
@@ -113,6 +113,6 @@ begin
     end
   end
 rescue Interrupt => e
-  puts " -> You have used 'control-C' to exit!"
+  puts " -> You have used 'control-C' to quit!"
   puts "Bye Bye! " 
 end
