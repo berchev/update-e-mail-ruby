@@ -12,7 +12,6 @@ This repo represents dev environment with 3 VMs:
 | File                   | Description                      |
 |         ---            |                ---               |
 | conf/mysqld.cnf | mysql configuration |
-| scripts/mysql_client01_provision.sh | provision script for app01 VM |
 | scripts/mysql01_provision.sh | provision script for mysql01 VM |
 | scripts/vault01_provision.sh | provision script for vault01 VM |
 | scripts/setup_mysql.sql | sql script required to setup mysql01 VM |
@@ -57,6 +56,7 @@ This repo represents dev environment with 3 VMs:
 - [x] If student name == exit we exit
 - [x] Print current vault user as infomation for the operator
 - [x] make application to exit smoothly with `ctrl + c`
+- [x] include sclack notification when e-mail has been updated and print vault user into slack channel
 
 ## TODO
 - [ ] Review flyway for database migration
