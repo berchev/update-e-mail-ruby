@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 export VAULT_ADDR='http://0.0.0.0:8200'
 
+################### MySQL ###################
 # Variables
 mysql_ip_port="192.168.56.11:3306"
 database_name="personal_info"
@@ -32,3 +33,19 @@ vault policy write mysql mysql.hcl
 
 # Create token for application server in order to read mysql secrets
 vault token create -policy=mysql | grep 'token ' | awk '{print $2}' > mysql_token.txt
+
+################## Slack ######################
+# Slack webhook_url need to be provided as an argument during script execution
+link=$1
+
+# Enable new kv secret engine "slack" version 1
+vault secrets enable -path="slack" -version=1 kv
+
+# Create secret url which match slack webhook url
+vault kv put slack/webhook_url url=${link}
+
+# Add new policy relatad to our application
+vault policy write slack slack.hcl
+
+# Create token based on slack policy
+vault token create -policy=slack |  grep 'token ' | awk '{print $2}' > slack_token.txt
