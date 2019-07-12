@@ -1,6 +1,6 @@
 # update-e-mail-ruby
 This repo represents dev environment with 3 VMs:
-- **app01** - representing our update-email ruby application (app.rb)
+- **mysql-client01** - representing our update-email ruby application (app.rb)
 - **mysql01**  - representing our MySQL Database (where students names and emails are stored)
 - **vault01** - representing our Vault server (which generates database user and password, used from app.rb)
 
@@ -19,6 +19,8 @@ This repo represents dev environment with 3 VMs:
 | Vagrantfile | Vagrant configuration file |
 | app.rb | ruby application which update email of specific student |
 | mysql.hcl | policy file. Vault token with specific permissions, will be created based on that policy file |
+| slack.hcl | policy file. Vault token with specific permissions, will be created based on that policy file |
+
 
 ## Description
 **mysql-client01**(app.rb) is application that updates email of specific student from **mysql01**. The ruby application(app.rb) connect to the MySQL database using token provided form **vault01** VM
@@ -37,7 +39,7 @@ This repo represents dev environment with 3 VMs:
 - `vault server -dev -dev-listen-address 0.0.0.0:8200` - start Vault server in dev mode, listening on all IP addresses
 - connect to vault server from another terminal
 - `cd /vagrant` - change to /vagrant directory
-- `bash scripts/vault_setup.sh` - script is going to configure your vault server(enable and configure database capability, create token for app01 to read mysql secrets)
+- `bash scripts/vault_setup.sh your_slack_webhook_url` - script is going to configure your vault server(enable and configure database capability, enable slack KV engine, create token for app01 to read mysql secrets, create token for app01 in order to read slack webhook url)
 
 ## Update given e-mail
 - open another terminal for our app01 machine
@@ -57,6 +59,7 @@ This repo represents dev environment with 3 VMs:
 - [x] Print current vault user as infomation for the operator
 - [x] make application to exit smoothly with `ctrl + c`
 - [x] include sclack notification when e-mail has been updated and print vault user into slack channel
+- [x] create KV secret engine for slack webhook URL
 
 ## TODO
 - [ ] Review flyway for database migration
