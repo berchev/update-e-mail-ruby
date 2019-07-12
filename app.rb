@@ -9,6 +9,7 @@ require 'vault'
 # Loading slack library
 require 'slack-notifier'
 
+####################################### FUNCTION DEFINITION START #######################################################
 # Format_as_table function definition
 def format_as_table(input)
   input.each do |row|
@@ -18,17 +19,60 @@ def format_as_table(input)
   end
 end
 
-# Get mysql token value from mysql_token.txt file and remove the last new line character
-mysql_token = File.open("mysql_token.txt", "r") { |file| file.read }.delete!("\n")
-
-# Estabish connection to vault
-Vault.configure do |config| 
-  config.address = "http://192.168.56.31:8200"
-  config.token = mysql_token
+# Connection to vault function definition
+def vault_connection(vault_adress, token)
+  Vault.configure do |config|
+    config.address = vault_adress
+    config.token = token
+  end
 end
 
+# Read token value function
+def read_token(target_file)
+  File.open(target_file, "r") do |file| 
+    file.read.delete!("\n")
+  end
+end
+#################################### FUNCTION DEFINITION END  #########################
+
+######################################  RUBY PROGRAM START  ###########################
+
+######################################  SLACK MAIN CONFIGURATION START #####################
+# Get slack token value from slack_token.txt file and remove the last new line character
+slack_token = read_token("slack_token.txt")
+
+# Add vault slack secret engine path as variable for convenience
+slack_secret_path = "slack/webhook_url"
+
+# Estabish connection to vault using slack token
+vault_connection("http://192.168.56.31:8200", slack_token)
+
+# Get the slack key/value pair from vault
+slack_secret = Vault.logical.read(slack_secret_path)
+
+# Extract the webhook url value from "slack/webhook_url" kv store
+webhook_url = slack_secret.data[:url]
+
+# Slack channel and username configuration
+notifier = Slack::Notifier.new webhook_url do
+  defaults channel: "#feed-georgi",
+           username: "app.rb"
+end
+
+###################################  SLACK MAIN CONFIGURATION END #########################
+
+###################################  MYSQL MAIN CONFIGURATION START #########################
+# Get mysql token value from mysql_token.txt file and remove the last new line character
+mysql_token = read_token("mysql_token.txt")
+
+# Add vault mysql role path as variable for convenience
+mysql_role_path = "database/creds/mysqlrole"
+
+# Estabish connection to vault using myqsl token
+vault_connection("http://192.168.56.31:8200", mysql_token)
+
 # Get new login credentials for mysql database
-secret = Vault.logical.read("database/creds/mysqlrole")
+secret = Vault.logical.read(mysql_role_path)
 
 # Mysql variables definition
 database = "personal_info"
@@ -36,12 +80,14 @@ host = "192.168.56.11"
 username = secret.data[:username]
 password = secret.data[:password]
 
-# Slack main configuration
-webhook_url = "https://hooks.slack.com/services/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"
-notifier = Slack::Notifier.new webhook_url do
-  defaults channel: "#feed-georgi",
-           username: "app.rb"
-end
+###################################  MYSQL MAIN CONFIGURATION END #########################
+
+# Establish connection to MySQL database
+client = Mysql2::Client.new(:host => host, :username => username, :password => password, :database => database)
+
+# Print your username
+puts
+puts "Your currently generated username from Vault is: #{username}"
 
 # Slack message body - vault user
 slack_vault_user = {
@@ -50,12 +96,7 @@ slack_vault_user = {
                      color: "good"
 }
 
-# Establish connection to MySQL database
-client = Mysql2::Client.new(:host => host, :username => username, :password => password, :database => database)
-
-# Print your username
-puts
-puts "Your currently generated username from Vault is: #{username}"
+# Sending informational event at slack about vault user
 notifier.post attachments: [slack_vault_user]
 
 # Get all current results from students table
